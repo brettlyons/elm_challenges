@@ -11,7 +11,7 @@
 //
 // If you no longer want to use a dependency, remember
 // to also remove its path from "config.paths.watched".
-import "phoenix_html"
+import "phoenix_html";
 
 // Import local files
 //
@@ -21,7 +21,9 @@ import "phoenix_html"
 // import socket from "./socket"
 
 import Elm from './main';
+
 const elmDiv = document.querySelector("#elm-target-div");
 if(elmDiv) {
   Elm.Main.embed(elmDiv);
 }
+

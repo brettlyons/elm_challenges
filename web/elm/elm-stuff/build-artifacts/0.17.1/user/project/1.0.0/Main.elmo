@@ -4,7 +4,7 @@ var _user$project$Main$plateStyle = function (color) {
 			{ctor: '_Tuple2', _0: 'background', _1: color},
 			{ctor: '_Tuple2', _0: 'color', _1: 'white'},
 			{ctor: '_Tuple2', _0: 'width', _1: '100%'},
-			{ctor: '_Tuple2', _0: 'height', _1: '600px'},
+			{ctor: '_Tuple2', _0: 'height', _1: '400px'},
 			{ctor: '_Tuple2', _0: 'display', _1: 'flex'},
 			{ctor: '_Tuple2', _0: 'align-items', _1: 'center'},
 			{ctor: '_Tuple2', _0: 'justify-content', _1: 'center'}
@@ -22,6 +22,32 @@ var _user$project$Main$plate = F2(
 			_elm_lang$core$Native_List.fromArray(
 				[
 					_elm_lang$html$Html$text(displayText)
+				]));
+	});
+var _user$project$Main$smallCircleMaker = F2(
+	function (radius, pos) {
+		return A2(
+			_elm_lang$svg$Svg$svg,
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_elm_lang$html$Html_Attributes$width(400),
+					_elm_lang$html$Html_Attributes$height(400),
+					_elm_lang$svg$Svg_Attributes$viewBox('0 0 400 400')
+				]),
+			_elm_lang$core$Native_List.fromArray(
+				[
+					A2(
+					_elm_lang$svg$Svg$circle,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$svg$Svg_Attributes$cx(
+							_elm_lang$core$Basics$toString(pos.x)),
+							_elm_lang$svg$Svg_Attributes$cy(
+							_elm_lang$core$Basics$toString(pos.y)),
+							_elm_lang$svg$Svg_Attributes$r('10')
+						]),
+					_elm_lang$core$Native_List.fromArray(
+						[]))
 				]));
 	});
 var _user$project$Main$update = F2(
@@ -82,8 +108,8 @@ var _user$project$Main$init = {
 	ctor: '_Tuple2',
 	_0: {
 		clickCount: 0,
-		pos: {x: 200, y: 200},
-		winSize: {width: 0, height: 0}
+		pos: A2(_elm_lang$mouse$Mouse$Position, 0, 0),
+		winSize: A2(_elm_lang$window$Window$Size, 0, 0)
 	},
 	_1: _user$project$Main$getWinWidth
 };
@@ -196,7 +222,21 @@ var _user$project$Main$view = function (model) {
 					[]),
 				_elm_lang$core$Native_List.fromArray(
 					[])),
-				(_elm_lang$core$Native_Utils.cmp(halfWidth, model.pos.x) > 0) ? A2(_user$project$Main$plate, 'Navy', 'On The Left') : A2(_user$project$Main$plate, 'Tomato', 'On The Right')
+				(_elm_lang$core$Native_Utils.cmp(halfWidth, model.pos.x) > 0) ? A2(_user$project$Main$plate, 'Navy', 'On The Left') : A2(_user$project$Main$plate, 'Tomato', 'On The Right'),
+				A2(
+				_elm_lang$html$Html$p,
+				_elm_lang$core$Native_List.fromArray(
+					[]),
+				_elm_lang$core$Native_List.fromArray(
+					[])),
+				A2(
+				_elm_lang$html$Html$div,
+				_elm_lang$core$Native_List.fromArray(
+					[]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html$text('Next thiny goes here?')
+					]))
 			]));
 };
 var _user$project$Main$main = {

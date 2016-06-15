@@ -5,8 +5,11 @@ import Html.App as Html
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Mouse exposing (Position)
-import Window exposing (Size)
+import Svg exposing (Svg, circle)
+import Svg.Attributes exposing (viewBox, cx, cy, r)
+import Random exposing (..)
 import Task
+import Window exposing (Size)
 
 
 -- MODEL
@@ -22,8 +25,8 @@ type alias Model =
 init : ( Model, Cmd Msg )
 init =
     ( { clickCount = 0
-      , pos = { x = 200, y = 200 }
-      , winSize = { width = 0, height = 0 }
+      , pos = Position 0 0
+      , winSize = Size 0 0
       }
     , getWinWidth
     )
@@ -39,6 +42,9 @@ getWinWidth =
 
 
 
+-- getRandomPos : Cmd Msg
+-- getRandomPos =
+--     Random.generate NewCircle (Random.pair (Random.int 1 380) (Random.int 1 380))
 -- UPDATE
 
 
@@ -48,6 +54,10 @@ type Msg
     | Reset
     | CurrentPos Position
     | CurrentSize Size
+
+
+
+-- | NewCircle ( Int, Int )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -70,6 +80,8 @@ update msg model =
 
 
 
+-- NewCircle {x, y} ->
+--     ( {model | })
 -- VIEW
 
 
@@ -101,12 +113,22 @@ view model =
                else
                 plate "Tomato" "On The Right"
               )
+            , p [] []
+            , div [] [ text "Next thiny goes here?" ]
             ]
 
 
 
--- rightPlate : Int -> Html
--- rightPlate pageWidth
+-- in this case, pos happens to be a conveniently defined type
+-- from Mouse -- even though I won't actually use Mouse.position
+-- for this.
+
+
+smallCircleMaker : Int -> Position -> Svg Msg
+smallCircleMaker radius pos =
+    Svg.svg
+        [ width 400, height 400, viewBox "0 0 400 400" ]
+        [ Svg.circle [ cx (toString pos.x), cy (toString pos.y), r "10" ] [] ]
 
 
 plate : String -> String -> Html Msg
@@ -121,17 +143,19 @@ plateStyle color =
     [ ( "background", color )
     , ( "color", "white" )
     , ( "width", "100%" )
-    , ( "height", "600px" )
+    , ( "height", "400px" )
     , ( "display", "flex" )
     , ( "align-items", "center" )
     , ( "justify-content", "center" )
     ]
 
 
+subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch [ Mouse.moves CurrentPos, Window.resizes CurrentSize ]
 
 
+main : Program Never
 main =
     Html.program
         { init = init
