@@ -24,109 +24,6 @@ var _user$project$Main$plate = F2(
 					_elm_lang$html$Html$text(displayText)
 				]));
 	});
-var _user$project$Main$smallCircleMaker = F2(
-	function (radius, pos) {
-		return A2(
-			_elm_lang$svg$Svg$svg,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_elm_lang$html$Html_Attributes$width(400),
-					_elm_lang$html$Html_Attributes$height(400),
-					_elm_lang$svg$Svg_Attributes$viewBox('0 0 400 400')
-				]),
-			_elm_lang$core$Native_List.fromArray(
-				[
-					A2(
-					_elm_lang$svg$Svg$circle,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$svg$Svg_Attributes$cx(
-							_elm_lang$core$Basics$toString(pos.x)),
-							_elm_lang$svg$Svg_Attributes$cy(
-							_elm_lang$core$Basics$toString(pos.y)),
-							_elm_lang$svg$Svg_Attributes$r('10')
-						]),
-					_elm_lang$core$Native_List.fromArray(
-						[]))
-				]));
-	});
-var _user$project$Main$update = F2(
-	function (msg, model) {
-		var _p0 = msg;
-		switch (_p0.ctor) {
-			case 'Increment':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{clickCount: model.clickCount + 1}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'Decrement':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{clickCount: model.clickCount - 1}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'Reset':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{clickCount: 0}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'CurrentPos':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{pos: _p0._0}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			default:
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{winSize: _p0._0}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-		}
-	});
-var _user$project$Main$Model = F3(
-	function (a, b, c) {
-		return {clickCount: a, pos: b, winSize: c};
-	});
-var _user$project$Main$CurrentSize = function (a) {
-	return {ctor: 'CurrentSize', _0: a};
-};
-var _user$project$Main$getWinWidth = A3(_elm_lang$core$Task$perform, _elm_lang$core$Basics$identity, _user$project$Main$CurrentSize, _elm_lang$window$Window$size);
-var _user$project$Main$init = {
-	ctor: '_Tuple2',
-	_0: {
-		clickCount: 0,
-		pos: A2(_elm_lang$mouse$Mouse$Position, 0, 0),
-		winSize: A2(_elm_lang$window$Window$Size, 0, 0)
-	},
-	_1: _user$project$Main$getWinWidth
-};
-var _user$project$Main$CurrentPos = function (a) {
-	return {ctor: 'CurrentPos', _0: a};
-};
-var _user$project$Main$subscriptions = function (model) {
-	return _elm_lang$core$Platform_Sub$batch(
-		_elm_lang$core$Native_List.fromArray(
-			[
-				_elm_lang$mouse$Mouse$moves(_user$project$Main$CurrentPos),
-				_elm_lang$window$Window$resizes(_user$project$Main$CurrentSize)
-			]));
-};
-var _user$project$Main$Reset = {ctor: 'Reset'};
-var _user$project$Main$Decrement = {ctor: 'Decrement'};
-var _user$project$Main$Increment = {ctor: 'Increment'};
 var _user$project$Main$view = function (model) {
 	var halfWidth = (model.winSize.width / 2) | 0;
 	return A2(
@@ -135,60 +32,6 @@ var _user$project$Main$view = function (model) {
 			[]),
 		_elm_lang$core$Native_List.fromArray(
 			[
-				A2(
-				_elm_lang$html$Html$button,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html_Attributes$class('btn btn-lg btn-primary'),
-						_elm_lang$html$Html_Events$onClick(_user$project$Main$Decrement)
-					]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html$text(' - ')
-					])),
-				A2(
-				_elm_lang$html$Html$div,
-				_elm_lang$core$Native_List.fromArray(
-					[]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html$text(
-						_elm_lang$core$Basics$toString(model.clickCount))
-					])),
-				A2(
-				_elm_lang$html$Html$button,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html_Attributes$class('btn btn-lg btn-info'),
-						_elm_lang$html$Html_Events$onClick(_user$project$Main$Increment)
-					]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html$text(' + ')
-					])),
-				A2(
-				_elm_lang$html$Html$p,
-				_elm_lang$core$Native_List.fromArray(
-					[]),
-				_elm_lang$core$Native_List.fromArray(
-					[])),
-				A2(
-				_elm_lang$html$Html$button,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html_Attributes$class('btn btn-lg btn-danger'),
-						_elm_lang$html$Html_Events$onClick(_user$project$Main$Reset)
-					]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html$text('Reset')
-					])),
-				A2(
-				_elm_lang$html$Html$p,
-				_elm_lang$core$Native_List.fromArray(
-					[]),
-				_elm_lang$core$Native_List.fromArray(
-					[])),
 				A2(
 				_elm_lang$html$Html$code,
 				_elm_lang$core$Native_List.fromArray(
@@ -205,7 +48,7 @@ var _user$project$Main$view = function (model) {
 				_elm_lang$core$Native_List.fromArray(
 					[
 						_elm_lang$html$Html$text(
-						_elm_lang$core$Basics$toString(model.winSize.width))
+						_elm_lang$core$Basics$toString(model.winSize))
 					])),
 				A2(
 				_elm_lang$html$Html$code,
@@ -222,21 +65,61 @@ var _user$project$Main$view = function (model) {
 					[]),
 				_elm_lang$core$Native_List.fromArray(
 					[])),
-				(_elm_lang$core$Native_Utils.cmp(halfWidth, model.pos.x) > 0) ? A2(_user$project$Main$plate, 'Navy', 'On The Left') : A2(_user$project$Main$plate, 'Tomato', 'On The Right'),
+				(_elm_lang$core$Native_Utils.cmp(halfWidth, model.pos.x) > 0) ? A2(_user$project$Main$plate, 'Green', 'Right') : A2(_user$project$Main$plate, 'Navy', 'Left'),
 				A2(
 				_elm_lang$html$Html$p,
 				_elm_lang$core$Native_List.fromArray(
 					[]),
 				_elm_lang$core$Native_List.fromArray(
-					[])),
-				A2(
-				_elm_lang$html$Html$div,
-				_elm_lang$core$Native_List.fromArray(
-					[]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html$text('Next thiny goes here?')
-					]))
+					[]))
+			]));
+};
+var _user$project$Main$update = F2(
+	function (msg, model) {
+		var _p0 = msg;
+		if (_p0.ctor === 'CurrentSize') {
+			return {
+				ctor: '_Tuple2',
+				_0: _elm_lang$core$Native_Utils.update(
+					model,
+					{winSize: _p0._0}),
+				_1: _elm_lang$core$Platform_Cmd$none
+			};
+		} else {
+			return {
+				ctor: '_Tuple2',
+				_0: _elm_lang$core$Native_Utils.update(
+					model,
+					{pos: _p0._0}),
+				_1: _elm_lang$core$Platform_Cmd$none
+			};
+		}
+	});
+var _user$project$Main$Model = F2(
+	function (a, b) {
+		return {pos: a, winSize: b};
+	});
+var _user$project$Main$CurrentPos = function (a) {
+	return {ctor: 'CurrentPos', _0: a};
+};
+var _user$project$Main$CurrentSize = function (a) {
+	return {ctor: 'CurrentSize', _0: a};
+};
+var _user$project$Main$getWindowWidth = A3(_elm_lang$core$Task$perform, _elm_lang$core$Basics$identity, _user$project$Main$CurrentSize, _elm_lang$window$Window$size);
+var _user$project$Main$init = {
+	ctor: '_Tuple2',
+	_0: {
+		pos: A2(_elm_lang$mouse$Mouse$Position, 0, 0),
+		winSize: A2(_elm_lang$window$Window$Size, 0, 0)
+	},
+	_1: _user$project$Main$getWindowWidth
+};
+var _user$project$Main$subscriptions = function (model) {
+	return _elm_lang$core$Platform_Sub$batch(
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$mouse$Mouse$moves(_user$project$Main$CurrentPos),
+				_elm_lang$window$Window$resizes(_user$project$Main$CurrentSize)
 			]));
 };
 var _user$project$Main$main = {
