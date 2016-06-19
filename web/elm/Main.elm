@@ -7,6 +7,7 @@ import Html.App as Html
 -- import Html.Attributes exposing (..)
 
 import Html.Events exposing (onClick)
+import Keyboard exposing (..)
 import Mouse exposing (Position)
 import Svg exposing (..)
 import Svg.Attributes exposing (width, height, viewBox, cx, cy, r, fill)
@@ -47,6 +48,7 @@ getRandomPos min maxWidth maxHeight =
 type Msg
     = NewCircle ( Int, Int )
     | Tick Time
+    | ButtonPress KeyCode
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -57,6 +59,9 @@ update msg model =
 
         Tick time ->
             ( model, getRandomPos 10 380 380 )
+
+        ButtonPress key ->
+            ( model, Cmd.none )
 
 
 
@@ -82,7 +87,7 @@ circleMaker radius pos =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch [ Time.every second Tick ]
+    Sub.batch [ Time.every second Tick, Keyboard.presses ButtonPress ]
 
 
 main : Program Never

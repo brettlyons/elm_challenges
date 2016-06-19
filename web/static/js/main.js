@@ -391,7 +391,7 @@ function eqHelp(x, y, depth, stack)
 		return true;
 	}
 
-	if (x.ctor !== y.ctor)
+	if (!eqHelp(x.ctor, y.ctor, depth + 1, stack))
 	{
 		return false;
 	}
@@ -673,20 +673,14 @@ function toString(v)
 			return '[]';
 		}
 
-		if (v.ctor === 'RBNode_elm_builtin' || v.ctor === 'RBEmpty_elm_builtin' || v.ctor === 'Set_elm_builtin')
+		if (v.ctor === 'Set_elm_builtin')
 		{
-			var name, list;
-			if (v.ctor === 'Set_elm_builtin')
-			{
-				name = 'Set';
-				list = _elm_lang$core$Set$toList(v._0);
-			}
-			else
-			{
-				name = 'Dict';
-				list = _elm_lang$core$Dict$toList(v);
-			}
-			return name + '.fromList ' + toString(list);
+			return 'Set.fromList ' + toString(_elm_lang$core$Set$toList(v));
+		}
+
+		if (v.ctor === 'RBNode_elm_builtin' || v.ctor === 'RBEmpty_elm_builtin')
+		{
+			return 'Dict.fromList ' + toString(_elm_lang$core$Dict$toList(v));
 		}
 
 		var output = '';
@@ -5625,6 +5619,11 @@ function badOneOf(problems)
 	return { tag: 'oneOf', problems: problems };
 }
 
+function badCustom(msg)
+{
+	return { tag: 'custom', msg: msg };
+}
+
 function bad(msg)
 {
 	return { tag: 'fail', msg: msg };
@@ -5661,6 +5660,11 @@ function badToString(problem)
 				return 'I ran into the following problems'
 					+ (context === '_' ? '' : ' at ' + context)
 					+ ':\n\n' + problems.join('\n');
+
+			case 'custom':
+				return 'A `customDecode` failed'
+					+ (context === '_' ? '' : ' at ' + context)
+					+ ' with the message: ' + problem.msg;
 
 			case 'fail':
 				return 'I ran into a `fail` decoder'
@@ -5864,7 +5868,7 @@ function runHelp(decoder, value)
 			var realResult = decoder.callback(result.value);
 			if (realResult.ctor === 'Err')
 			{
-				return badPrimitive('something custom', value);
+				return badCustom(realResult._0);
 			}
 			return ok(realResult._0);
 
@@ -8260,6 +8264,176 @@ var _elm_lang$html$Html_Events$Options = F2(
 		return {stopPropagation: a, preventDefault: b};
 	});
 
+var _elm_lang$keyboard$Keyboard$onSelfMsg = F3(
+	function (router, _p0, state) {
+		var _p1 = _p0;
+		var _p2 = A2(_elm_lang$core$Dict$get, _p1.category, state);
+		if (_p2.ctor === 'Nothing') {
+			return _elm_lang$core$Task$succeed(state);
+		} else {
+			var send = function (tagger) {
+				return A2(
+					_elm_lang$core$Platform$sendToApp,
+					router,
+					tagger(_p1.keyCode));
+			};
+			return A2(
+				_elm_lang$core$Task$andThen,
+				_elm_lang$core$Task$sequence(
+					A2(_elm_lang$core$List$map, send, _p2._0.taggers)),
+				function (_p3) {
+					return _elm_lang$core$Task$succeed(state);
+				});
+		}
+	});
+var _elm_lang$keyboard$Keyboard_ops = _elm_lang$keyboard$Keyboard_ops || {};
+_elm_lang$keyboard$Keyboard_ops['&>'] = F2(
+	function (t1, t2) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			t1,
+			function (_p4) {
+				return t2;
+			});
+	});
+var _elm_lang$keyboard$Keyboard$init = _elm_lang$core$Task$succeed(_elm_lang$core$Dict$empty);
+var _elm_lang$keyboard$Keyboard$categorizeHelpHelp = F2(
+	function (value, maybeValues) {
+		var _p5 = maybeValues;
+		if (_p5.ctor === 'Nothing') {
+			return _elm_lang$core$Maybe$Just(
+				_elm_lang$core$Native_List.fromArray(
+					[value]));
+		} else {
+			return _elm_lang$core$Maybe$Just(
+				A2(_elm_lang$core$List_ops['::'], value, _p5._0));
+		}
+	});
+var _elm_lang$keyboard$Keyboard$categorizeHelp = F2(
+	function (subs, subDict) {
+		categorizeHelp:
+		while (true) {
+			var _p6 = subs;
+			if (_p6.ctor === '[]') {
+				return subDict;
+			} else {
+				var _v4 = _p6._1,
+					_v5 = A3(
+					_elm_lang$core$Dict$update,
+					_p6._0._0,
+					_elm_lang$keyboard$Keyboard$categorizeHelpHelp(_p6._0._1),
+					subDict);
+				subs = _v4;
+				subDict = _v5;
+				continue categorizeHelp;
+			}
+		}
+	});
+var _elm_lang$keyboard$Keyboard$categorize = function (subs) {
+	return A2(_elm_lang$keyboard$Keyboard$categorizeHelp, subs, _elm_lang$core$Dict$empty);
+};
+var _elm_lang$keyboard$Keyboard$keyCode = A2(_elm_lang$core$Json_Decode_ops[':='], 'keyCode', _elm_lang$core$Json_Decode$int);
+var _elm_lang$keyboard$Keyboard$subscription = _elm_lang$core$Native_Platform.leaf('Keyboard');
+var _elm_lang$keyboard$Keyboard$Watcher = F2(
+	function (a, b) {
+		return {taggers: a, pid: b};
+	});
+var _elm_lang$keyboard$Keyboard$Msg = F2(
+	function (a, b) {
+		return {category: a, keyCode: b};
+	});
+var _elm_lang$keyboard$Keyboard$onEffects = F3(
+	function (router, newSubs, oldState) {
+		var rightStep = F3(
+			function (category, taggers, task) {
+				return A2(
+					_elm_lang$core$Task$andThen,
+					task,
+					function (state) {
+						return A2(
+							_elm_lang$core$Task$andThen,
+							_elm_lang$core$Process$spawn(
+								A3(
+									_elm_lang$dom$Dom_LowLevel$onDocument,
+									category,
+									_elm_lang$keyboard$Keyboard$keyCode,
+									function (_p7) {
+										return A2(
+											_elm_lang$core$Platform$sendToSelf,
+											router,
+											A2(_elm_lang$keyboard$Keyboard$Msg, category, _p7));
+									})),
+							function (pid) {
+								return _elm_lang$core$Task$succeed(
+									A3(
+										_elm_lang$core$Dict$insert,
+										category,
+										A2(_elm_lang$keyboard$Keyboard$Watcher, taggers, pid),
+										state));
+							});
+					});
+			});
+		var bothStep = F4(
+			function (category, _p8, taggers, task) {
+				var _p9 = _p8;
+				return A2(
+					_elm_lang$core$Task$andThen,
+					task,
+					function (state) {
+						return _elm_lang$core$Task$succeed(
+							A3(
+								_elm_lang$core$Dict$insert,
+								category,
+								A2(_elm_lang$keyboard$Keyboard$Watcher, taggers, _p9.pid),
+								state));
+					});
+			});
+		var leftStep = F3(
+			function (category, _p10, task) {
+				var _p11 = _p10;
+				return A2(
+					_elm_lang$keyboard$Keyboard_ops['&>'],
+					_elm_lang$core$Process$kill(_p11.pid),
+					task);
+			});
+		return A6(
+			_elm_lang$core$Dict$merge,
+			leftStep,
+			bothStep,
+			rightStep,
+			oldState,
+			_elm_lang$keyboard$Keyboard$categorize(newSubs),
+			_elm_lang$core$Task$succeed(_elm_lang$core$Dict$empty));
+	});
+var _elm_lang$keyboard$Keyboard$MySub = F2(
+	function (a, b) {
+		return {ctor: 'MySub', _0: a, _1: b};
+	});
+var _elm_lang$keyboard$Keyboard$presses = function (tagger) {
+	return _elm_lang$keyboard$Keyboard$subscription(
+		A2(_elm_lang$keyboard$Keyboard$MySub, 'keypress', tagger));
+};
+var _elm_lang$keyboard$Keyboard$downs = function (tagger) {
+	return _elm_lang$keyboard$Keyboard$subscription(
+		A2(_elm_lang$keyboard$Keyboard$MySub, 'keydown', tagger));
+};
+var _elm_lang$keyboard$Keyboard$ups = function (tagger) {
+	return _elm_lang$keyboard$Keyboard$subscription(
+		A2(_elm_lang$keyboard$Keyboard$MySub, 'keyup', tagger));
+};
+var _elm_lang$keyboard$Keyboard$subMap = F2(
+	function (func, _p12) {
+		var _p13 = _p12;
+		return A2(
+			_elm_lang$keyboard$Keyboard$MySub,
+			_p13._0,
+			function (_p14) {
+				return func(
+					_p13._1(_p14));
+			});
+	});
+_elm_lang$core$Native_Platform.effectManagers['Keyboard'] = {pkg: 'elm-lang/keyboard', init: _elm_lang$keyboard$Keyboard$init, onEffects: _elm_lang$keyboard$Keyboard$onEffects, onSelfMsg: _elm_lang$keyboard$Keyboard$onSelfMsg, tag: 'sub', subMap: _elm_lang$keyboard$Keyboard$subMap};
+
 var _elm_lang$mouse$Mouse$onSelfMsg = F3(
 	function (router, _p0, state) {
 		var _p1 = _p0;
@@ -8956,6 +9130,9 @@ var _user$project$Main$init = {
 var _user$project$Main$Model = function (a) {
 	return {circles: a};
 };
+var _user$project$Main$ButtonPress = function (a) {
+	return {ctor: 'ButtonPress', _0: a};
+};
 var _user$project$Main$Tick = function (a) {
 	return {ctor: 'Tick', _0: a};
 };
@@ -8963,7 +9140,8 @@ var _user$project$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$batch(
 		_elm_lang$core$Native_List.fromArray(
 			[
-				A2(_elm_lang$core$Time$every, _elm_lang$core$Time$second, _user$project$Main$Tick)
+				A2(_elm_lang$core$Time$every, _elm_lang$core$Time$second, _user$project$Main$Tick),
+				_elm_lang$keyboard$Keyboard$presses(_user$project$Main$ButtonPress)
 			]));
 };
 var _user$project$Main$NewCircle = function (a) {
@@ -8982,22 +9160,25 @@ var _user$project$Main$getRandomPos = F3(
 var _user$project$Main$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
-		if (_p0.ctor === 'NewCircle') {
-			return {
-				ctor: '_Tuple2',
-				_0: _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						circles: A2(_elm_lang$core$List_ops['::'], _p0._0, model.circles)
-					}),
-				_1: _elm_lang$core$Platform_Cmd$none
-			};
-		} else {
-			return {
-				ctor: '_Tuple2',
-				_0: model,
-				_1: A3(_user$project$Main$getRandomPos, 10, 380, 380)
-			};
+		switch (_p0.ctor) {
+			case 'NewCircle':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							circles: A2(_elm_lang$core$List_ops['::'], _p0._0, model.circles)
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'Tick':
+				return {
+					ctor: '_Tuple2',
+					_0: model,
+					_1: A3(_user$project$Main$getRandomPos, 10, 380, 380)
+				};
+			default:
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 		}
 	});
 var _user$project$Main$main = {
