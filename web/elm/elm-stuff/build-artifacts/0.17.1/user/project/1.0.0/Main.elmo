@@ -55,15 +55,15 @@ var _user$project$Main$subscriptions = function (model) {
 var _user$project$Main$NewCircle = function (a) {
 	return {ctor: 'NewCircle', _0: a};
 };
-var _user$project$Main$getRandomPos = F2(
-	function (maxWidth, maxHeight) {
+var _user$project$Main$getRandomPos = F3(
+	function (min, maxWidth, maxHeight) {
 		return A2(
 			_elm_lang$core$Random$generate,
 			_user$project$Main$NewCircle,
 			A2(
 				_elm_lang$core$Random$pair,
-				A2(_elm_lang$core$Random$int, 1, maxWidth),
-				A2(_elm_lang$core$Random$int, 1, maxHeight)));
+				A2(_elm_lang$core$Random$int, min, maxWidth),
+				A2(_elm_lang$core$Random$int, min, maxHeight)));
 	});
 var _user$project$Main$update = F2(
 	function (msg, model) {
@@ -82,7 +82,7 @@ var _user$project$Main$update = F2(
 			return {
 				ctor: '_Tuple2',
 				_0: model,
-				_1: A2(_user$project$Main$getRandomPos, 400, 400)
+				_1: A3(_user$project$Main$getRandomPos, 10, 380, 380)
 			};
 		}
 	});

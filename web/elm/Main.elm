@@ -35,9 +35,9 @@ init =
     )
 
 
-getRandomPos : Int -> Int -> Cmd Msg
-getRandomPos maxWidth maxHeight =
-    Random.generate NewCircle (Random.pair (Random.int 1 maxWidth) (Random.int 1 maxHeight))
+getRandomPos : Int -> Int -> Int -> Cmd Msg
+getRandomPos min maxWidth maxHeight =
+    Random.generate NewCircle (Random.pair (Random.int min maxWidth) (Random.int min maxHeight))
 
 
 
@@ -56,7 +56,7 @@ update msg model =
             ( { model | circles = xy :: model.circles }, Cmd.none )
 
         Tick time ->
-            ( model, getRandomPos 400 400 )
+            ( model, getRandomPos 10 380 380 )
 
 
 
