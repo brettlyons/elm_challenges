@@ -2,20 +2,10 @@ module Main exposing (..)
 
 import Html exposing (..)
 import Html.App as Html
-import Html.Attributes exposing (class)
-import Html.Events exposing (onClick)
+import Html.Attributes exposing (class, placeholder)
+import Html.Events exposing (onClick, onInput)
 import Keyboard exposing (..)
 import Http
-
-
--- import Mouse exposing (Position)
-
-import Random exposing (..)
-
-
--- import Task
--- import Window exposing (Size)
-
 import Time exposing (Time, second)
 
 
@@ -35,7 +25,7 @@ init =
     ( { textEntry = ""
       , userName = ""
       , avatarUrl = ""
-      , langauges = []
+      , languages = []
       }
     , Cmd.none
     )
@@ -66,8 +56,16 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ text "Fresh Text!" ]
+    div [ class "container" ]
+        [ div [ class "row" ]
+            [ input
+                [ placeholder "Github Username", onInput TextInput ]
+                []
+            ]
+        , div
+            [ class "row" ]
+            [ text ("Fresh Text! : " ++ model.textEntry) ]
+        ]
 
 
 subscriptions : Model -> Sub Msg
