@@ -1,25 +1,3 @@
-var _user$project$Main$circleMaker = F2(
-	function (radius, pos) {
-		return A2(
-			_elm_lang$svg$Svg$circle,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_elm_lang$svg$Svg_Attributes$cx(
-					_elm_lang$core$Basics$toString(
-						_elm_lang$core$Basics$fst(pos))),
-					_elm_lang$svg$Svg_Attributes$cy(
-					_elm_lang$core$Basics$toString(
-						_elm_lang$core$Basics$snd(pos))),
-					_elm_lang$svg$Svg_Attributes$r(
-					_elm_lang$core$Basics$toString(radius)),
-					_elm_lang$svg$Svg_Attributes$fill('#0B79CE')
-				]),
-			_elm_lang$core$Native_List.fromArray(
-				[]));
-	});
-var _user$project$Main$smallCircleMaker = function (pos) {
-	return A2(_user$project$Main$circleMaker, 10, pos);
-};
 var _user$project$Main$init = {
 	ctor: '_Tuple2',
 	_0: {
@@ -57,15 +35,6 @@ var _user$project$Main$view = function (model) {
 							'Paused: ',
 							_elm_lang$core$Basics$toString(model.paused)))
 					])),
-				A2(
-				_elm_lang$svg$Svg$svg,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$svg$Svg_Attributes$width('400'),
-						_elm_lang$svg$Svg_Attributes$height('400'),
-						_elm_lang$svg$Svg_Attributes$viewBox('0 0 400 400')
-					]),
-				A2(_elm_lang$core$List$map, _user$project$Main$smallCircleMaker, model.circles)),
 				A2(
 				_elm_lang$html$Html$div,
 				_elm_lang$core$Native_List.fromArray(

@@ -5,13 +5,10 @@ import Html.App as Html
 import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
 import Keyboard exposing (..)
-import Char exposing (fromCode)
 
 
 -- import Mouse exposing (Position)
 
-import Svg exposing (..)
-import Svg.Attributes exposing (width, height, viewBox, cx, cy, r, fill)
 import Random exposing (..)
 
 
@@ -97,29 +94,16 @@ view model =
         div []
             [ div
                 []
-                [ Html.text ("Paused: " ++ (toString model.paused)) ]
-            , Svg.svg
-                [ width "400", height "400", viewBox "0 0 400 400" ]
-                (List.map smallCircleMaker model.circles)
+                [ text ("Paused: " ++ (toString model.paused)) ]
             , div [ class "row" ]
                 [ button
                     [ class "btn btn-lg btn-info", onClick (ButtonPress 112) ]
-                    [ Html.text pauseText ]
+                    [ text pauseText ]
                 , button
                     [ class "btn btn-lg btn-danger pull-right", onClick (ButtonPress 114) ]
-                    [ Html.text "Clear field and restart" ]
+                    [ text "Clear field and restart" ]
                 ]
             ]
-
-
-smallCircleMaker : ( Int, Int ) -> Svg Msg
-smallCircleMaker pos =
-    circleMaker 10 pos
-
-
-circleMaker : Int -> ( Int, Int ) -> Svg Msg
-circleMaker radius pos =
-    circle [ cx (toString (fst pos)), cy (toString (snd pos)), r (toString radius), fill "#0B79CE" ] []
 
 
 subscriptions : Model -> Sub Msg
