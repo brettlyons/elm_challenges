@@ -1,6 +1,10 @@
 {
     "elm-lang/virtual-dom": "1.1.1",
     "elm-lang/mouse": "1.0.0",
+<<<<<<< HEAD
+=======
+    "evancz/elm-http": "3.0.1",
+>>>>>>> 0c6d23c5515660c229507bd2f352bc687b4793ad
     "elm-lang/dom": "1.1.0",
     "elm-lang/html": "1.1.0",
     "elm-lang/keyboard": "1.0.0",
