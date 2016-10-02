@@ -1,32 +1,72 @@
-var _user$project$Main$update = F2(
-	function (msg, model) {
-		var _p0 = msg;
-		if (_p0.ctor === 'Tick') {
-			return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-		} else {
-			return {
-				ctor: '_Tuple2',
-				_0: _elm_lang$core$Native_Utils.update(
-					model,
-					{textEntry: _p0._0}),
-				_1: _elm_lang$core$Platform_Cmd$none
-			};
-		}
+var _user$project$Main$Model = F3(
+	function (a, b, c) {
+		return {textEntry: a, userInfo: b, seconds: c};
+	});
+var _user$project$Main$UserInfo = F2(
+	function (a, b) {
+		return {userName: a, avatarUrl: b};
 	});
 var _user$project$Main$init = {
 	ctor: '_Tuple2',
 	_0: {
 		textEntry: '',
-		userName: '',
-		avatarUrl: '',
-		languages: _elm_lang$core$Native_List.fromArray(
-			[])
+		userInfo: A2(_user$project$Main$UserInfo, '', ''),
+		seconds: 0
 	},
 	_1: _elm_lang$core$Platform_Cmd$none
 };
-var _user$project$Main$Model = F4(
-	function (a, b, c, d) {
-		return {textEntry: a, userName: b, avatarUrl: c, languages: d};
+var _user$project$Main$decodeRemoteUserInfo = A3(
+	_elm_lang$core$Json_Decode$object2,
+	_user$project$Main$UserInfo,
+	A2(_elm_lang$core$Json_Decode_ops[':='], 'name', _elm_lang$core$Json_Decode$string),
+	A2(_elm_lang$core$Json_Decode_ops[':='], 'avatar_url', _elm_lang$core$Json_Decode$string));
+var _user$project$Main$FetchSucceed = function (a) {
+	return {ctor: 'FetchSucceed', _0: a};
+};
+var _user$project$Main$FetchFail = function (a) {
+	return {ctor: 'FetchFail', _0: a};
+};
+var _user$project$Main$getUserInfo = function (userName) {
+	var url = A2(_elm_lang$core$Basics_ops['++'], 'https://api.github.com/users/', userName);
+	return A3(
+		_elm_lang$core$Task$perform,
+		_user$project$Main$FetchFail,
+		_user$project$Main$FetchSucceed,
+		A2(_evancz$elm_http$Http$get, _user$project$Main$decodeRemoteUserInfo, url));
+};
+var _user$project$Main$update = F2(
+	function (msg, model) {
+		var _p0 = msg;
+		switch (_p0.ctor) {
+			case 'Tick':
+				return {
+					ctor: '_Tuple2',
+					_0: (_elm_lang$core$Native_Utils.cmp(
+						_elm_lang$core$String$length(model.textEntry),
+						3) < 0) ? model : _elm_lang$core$Native_Utils.update(
+						model,
+						{seconds: model.seconds + 1}),
+					_1: ((_elm_lang$core$Native_Utils.cmp(model.seconds, 1) > 0) && (_elm_lang$core$Native_Utils.cmp(model.seconds, 3) < 0)) ? _user$project$Main$getUserInfo(model.textEntry) : _elm_lang$core$Platform_Cmd$none
+				};
+			case 'TextInput':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{textEntry: _p0._0, seconds: 0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'FetchFail':
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			default:
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{userInfo: _p0._0, seconds: 0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+		}
 	});
 var _user$project$Main$Tick = function (a) {
 	return {ctor: 'Tick', _0: a};
@@ -42,6 +82,21 @@ var _user$project$Main$TextInput = function (a) {
 	return {ctor: 'TextInput', _0: a};
 };
 var _user$project$Main$view = function (model) {
+	var imgContents = (_elm_lang$core$Native_Utils.cmp(
+		_elm_lang$core$String$length(model.userInfo.avatarUrl),
+		3) > 0) ? _elm_lang$core$Native_List.fromArray(
+		[
+			A2(
+			_elm_lang$html$Html$img,
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_elm_lang$html$Html_Attributes$src(
+					_elm_lang$core$Basics$toString(model.userInfo.avatarUrl))
+				]),
+			_elm_lang$core$Native_List.fromArray(
+				[]))
+		]) : _elm_lang$core$Native_List.fromArray(
+		[]);
 	return A2(
 		_elm_lang$html$Html$div,
 		_elm_lang$core$Native_List.fromArray(
@@ -78,7 +133,25 @@ var _user$project$Main$view = function (model) {
 					[
 						_elm_lang$html$Html$text(
 						A2(_elm_lang$core$Basics_ops['++'], 'Fresh Text! : ', model.textEntry))
-					]))
+					])),
+				A2(
+				_elm_lang$html$Html$div,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$class('row')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html$text(
+						A2(_elm_lang$core$Basics_ops['++'], 'DEBUG: if web req success -> userName: ', model.userInfo.userName))
+					])),
+				A2(
+				_elm_lang$html$Html$div,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$class('row')
+					]),
+				imgContents)
 			]));
 };
 var _user$project$Main$main = {

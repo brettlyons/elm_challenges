@@ -1,10 +1,16 @@
 module Main exposing (..)
 
 import Html exposing (..)
+import String exposing (..)
 import Html.App as Html
-import Html.Attributes exposing (class, placeholder)
+import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
-import Keyboard exposing (..)
+import Json.Decode exposing (..)
+import Task
+
+
+-- import Keyboard exposing (..)
+
 import Http
 import Time exposing (Time, second)
 
@@ -14,21 +20,45 @@ import Time exposing (Time, second)
 
 type alias Model =
     { textEntry : String
-    , userName : String
+    , userInfo : UserInfo
+    , seconds : Int
+    }
+
+
+type alias UserInfo =
+    { userName : String
     , avatarUrl : String
-    , languages : List String
     }
 
 
 init : ( Model, Cmd Msg )
 init =
     ( { textEntry = ""
-      , userName = ""
-      , avatarUrl = ""
-      , languages = []
+      , userInfo = UserInfo "" ""
+      , seconds = 0
       }
     , Cmd.none
     )
+
+
+
+-- HTTP
+
+
+getUserInfo : String -> Cmd Msg
+getUserInfo userName =
+    let
+        url =
+            "https://api.github.com/users/" ++ userName
+    in
+        Task.perform FetchFail FetchSucceed (Http.get decodeRemoteUserInfo url)
+
+
+decodeRemoteUserInfo : Decoder UserInfo
+decodeRemoteUserInfo =
+    object2 UserInfo
+        ("name" := string)
+        ("avatar_url" := string)
 
 
 
@@ -38,16 +68,32 @@ init =
 type Msg
     = TextInput String
     | Tick Time
+    | FetchFail Http.Error
+    | FetchSucceed UserInfo
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Tick time ->
-            ( model, Cmd.none )
+            ( if (String.length model.textEntry) < 3 then
+                model
+              else
+                { model | seconds = model.seconds + 1 }
+            , if model.seconds > 1 && model.seconds < 3 then
+                (getUserInfo model.textEntry)
+              else
+                Cmd.none
+            )
 
         TextInput name ->
-            ( { model | textEntry = name }, Cmd.none )
+            ( { model | textEntry = name, seconds = 0 }, Cmd.none )
+
+        FetchFail _ ->
+            ( model, Cmd.none )
+
+        FetchSucceed newUserInfo ->
+            ( { model | userInfo = newUserInfo, seconds = 0 }, Cmd.none )
 
 
 
@@ -56,16 +102,27 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div [ class "container" ]
-        [ div [ class "row" ]
-            [ input
-                [ placeholder "Github Username", onInput TextInput ]
+    let
+        imgContents =
+            if String.length model.userInfo.avatarUrl > 3 then
+                [ img [ src (toString model.userInfo.avatarUrl) ] [] ]
+            else
                 []
+    in
+        div [ class "container" ]
+            [ div [ class "row" ]
+                [ input
+                    [ placeholder "Github Username", onInput TextInput ]
+                    []
+                ]
+            , div
+                [ class "row" ]
+                [ text ("Fresh Text! : " ++ model.textEntry) ]
+            , div [ class "row" ]
+                [ text ("DEBUG: if web req success -> userName: " ++ model.userInfo.userName) ]
+            , div [ class "row" ]
+                imgContents
             ]
-        , div
-            [ class "row" ]
-            [ text ("Fresh Text! : " ++ model.textEntry) ]
-        ]
 
 
 subscriptions : Model -> Sub Msg
