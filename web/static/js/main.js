@@ -8747,12 +8747,12 @@ var _user$project$Main$update = F2(
 			case 'Tick':
 				return {
 					ctor: '_Tuple2',
-					_0: (_elm_lang$core$Native_Utils.cmp(
-						_elm_lang$core$String$length(model.textEntry),
-						3) < 0) ? model : _elm_lang$core$Native_Utils.update(
+					_0: (_elm_lang$core$Native_Utils.cmp(model.seconds, 4) < 0) ? _elm_lang$core$Native_Utils.update(
 						model,
-						{seconds: model.seconds + 1}),
-					_1: ((_elm_lang$core$Native_Utils.cmp(model.seconds, 1) > 0) && (_elm_lang$core$Native_Utils.cmp(model.seconds, 3) < 0)) ? _user$project$Main$getUserInfo(model.textEntry) : _elm_lang$core$Platform_Cmd$none
+						{seconds: model.seconds + 1}) : model,
+					_1: ((_elm_lang$core$Native_Utils.cmp(model.seconds, 2) > 0) && ((_elm_lang$core$Native_Utils.cmp(model.seconds, 4) < 0) && (_elm_lang$core$Native_Utils.cmp(
+						_elm_lang$core$String$length(model.textEntry),
+						5) > 0))) ? _user$project$Main$getUserInfo(model.textEntry) : _elm_lang$core$Platform_Cmd$none
 				};
 			case 'TextInput':
 				return {
@@ -8796,8 +8796,7 @@ var _user$project$Main$view = function (model) {
 			_elm_lang$html$Html$img,
 			_elm_lang$core$Native_List.fromArray(
 				[
-					_elm_lang$html$Html_Attributes$src(
-					_elm_lang$core$Basics$toString(model.userInfo.avatarUrl))
+					_elm_lang$html$Html_Attributes$src(model.userInfo.avatarUrl)
 				]),
 			_elm_lang$core$Native_List.fromArray(
 				[]))
@@ -8838,7 +8837,10 @@ var _user$project$Main$view = function (model) {
 				_elm_lang$core$Native_List.fromArray(
 					[
 						_elm_lang$html$Html$text(
-						A2(_elm_lang$core$Basics_ops['++'], 'Fresh Text! : ', model.textEntry))
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							'Debug: model.seconds: ',
+							_elm_lang$core$Basics$toString(model.seconds)))
 					])),
 				A2(
 				_elm_lang$html$Html$div,
@@ -8849,7 +8851,7 @@ var _user$project$Main$view = function (model) {
 				_elm_lang$core$Native_List.fromArray(
 					[
 						_elm_lang$html$Html$text(
-						A2(_elm_lang$core$Basics_ops['++'], 'DEBUG: if web req success -> userName: ', model.userInfo.userName))
+						A2(_elm_lang$core$Basics_ops['++'], 'Name: ', model.userInfo.userName))
 					])),
 				A2(
 				_elm_lang$html$Html$div,

@@ -76,11 +76,11 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Tick time ->
-            ( if (String.length model.textEntry) < 3 then
-                model
-              else
+            ( if model.seconds < 4 then
                 { model | seconds = model.seconds + 1 }
-            , if model.seconds > 1 && model.seconds < 3 then
+              else
+                model
+            , if model.seconds > 2 && model.seconds < 4 && (String.length model.textEntry) > 5 then
                 (getUserInfo model.textEntry)
               else
                 Cmd.none
@@ -105,7 +105,7 @@ view model =
     let
         imgContents =
             if String.length model.userInfo.avatarUrl > 3 then
-                [ img [ src (toString model.userInfo.avatarUrl) ] [] ]
+                [ img [ src model.userInfo.avatarUrl ] [] ]
             else
                 []
     in
@@ -117,9 +117,9 @@ view model =
                 ]
             , div
                 [ class "row" ]
-                [ text ("Fresh Text! : " ++ model.textEntry) ]
+                [ text ("Debug: model.seconds: " ++ (toString model.seconds)) ]
             , div [ class "row" ]
-                [ text ("DEBUG: if web req success -> userName: " ++ model.userInfo.userName) ]
+                [ text ("Name: " ++ model.userInfo.userName) ]
             , div [ class "row" ]
                 imgContents
             ]
