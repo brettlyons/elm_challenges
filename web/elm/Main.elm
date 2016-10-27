@@ -76,7 +76,7 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Tick time ->
-            ( if model.seconds < 4 then
+            ( if model.seconds < 4 && model.seconds /= 0 then
                 { model | seconds = model.seconds + 1 }
               else
                 model
@@ -87,7 +87,7 @@ update msg model =
             )
 
         TextInput name ->
-            ( { model | textEntry = name, seconds = 0 }, Cmd.none )
+            ( { model | textEntry = name, seconds = 1 }, Cmd.none )
 
         FetchFail _ ->
             ( model, Cmd.none )
